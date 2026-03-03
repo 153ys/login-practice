@@ -56,7 +56,22 @@ loginForm.addEventListener("submit", (e) => {
   if (pswValid(isLongEnough, rules)) {
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
-    console.log(data);
+    const url = "https://jsonplaceholder.typicode.com/posts";
+
+    fetch(url, {
+      method: "POST",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("登入失敗，請檢查帳號密碼");
+        return res.json();
+      })
+      .then((result) => console.log("登入成功！伺服器回傳的Token:", result))
+      .catch((err) => {
+        console.log("發生錯誤：", err.message);
+        pswError.textContent = err.message;
+      });
   } else {
     showPswError(isLongEnough, rules);
   }
