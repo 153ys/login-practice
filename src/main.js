@@ -35,14 +35,12 @@ function pswValid(isLongEnough, rules) {
 psw.addEventListener("input", () => {
   const { isLongEnough, rules } = getPswRules();
 
-  if (pswValid(isLongEnough, rules)) {
-    pswError.textContent = "";
-  } else if (rules < 3) {
-    pswError.textContent =
-      "密碼格式不正確：確認是否有包含大小寫英文字母以及 !@#$%^&*";
-  } else if (isLongEnough != true) {
-    pswError.textContent = "密碼格式不正確：密碼未滿 8 個字";
-  }
+  const errors = [];
+  if (!isLongEnough) errors.push("密碼未滿 8 個字");
+  if (rules < 3) errors.push("密碼需包含大小寫英文字母以及 !@#$%^&*");
+
+  pswError.textContent =
+    errors.length > 0 ? `密碼格式不正確：${errors.join("、")}` : "";
 });
 
 // 阻止預設行為與資料抓取
